@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الدخول - بوابة القبول</title>
+  <!-- استخدام Tailwind CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: #f5f7fa;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #0b81e9;
+      color:rgb(14, 40, 107);
+      padding: 15px 0;
+    }
+    header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header img {
+      width: 150px;
+      height: 150px;
+    }
+    header h1 {
+      font-size: 1em;
+      margin: 0 10px;
+    }
+    nav a {
+      color: #055d4a;
+      font-weight: bold;
+      margin: 0 10px;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #ffcc00;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+    .btn {
+      background-color: #047ae9;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .btn:hover {
+      background-color: #067fbb;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 15px;
+    }
+    .page {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- رأس الموقع -->
+  <header>
+    <div class="container flex items-center justify-between px-4">
+      <div class="flex items-center">
+        <!-- استبدل رابط الشعار برابط شعار الجامعة الفعلي -->
+        <img src="logo.png" alt="شعار الجامعة">
+        <h1>بوابة القبول الأكاديمي</h1>
+      </div>
+      <nav>
+        <a href="#">الرئيسية</a>
+        <a href="#">عن الكلية</a>
+        <a href="#">القبول</a>
+        <a href="#">التواصل</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- المحتوى الرئيسي -->
+  <div id="content" class="container mt-8 px-4">
+    <div id="loginPage" class="page min-h-screen flex items-center justify-center">
+      <div class="w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-6 text-center">تسجيل الدخول</h2>
+        <input type="text" id="identityNumber" placeholder="الرقم الجامعي">
+        <input type="password" id="password" placeholder="كلمة المرور">
+        <div class="flex items-center mb-4">
+          <input type="checkbox" id="rememberMe" class="mr-2">
+          <label for="rememberMe">تذكرني</label>
+        </div>
+        <button onclick="handleLogin()" class="btn w-full">تسجيل الدخول</button>
+        <div id="message" class="text-red-500 mt-4 text-center"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // دالة معالجة تسجيل الدخول والتحقق من البيانات
+    function handleLogin() {
+      const identityNumber = document.getElementById('identityNumber').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const rememberMe = document.getElementById('rememberMe').checked;
+      const messageDiv = document.getElementById('message');
+
+      // بيانات الاعتماد الثابتة
+      const validCredentials = [
+        { id: 'jic23005427', pass: '1133565638' },
+        { id: '469225965', pass: '1121001398' },
+        { id: '463910', pass: '1132973189' }
+      ];
+
+
+      
+
+      // التحقق من بيانات الاعتماد
+      const isValidUser = validCredentials.some(cred => cred.id === identityNumber && cred.pass === password);
+
+      if (isValidUser) {
+        if (rememberMe) {
+          localStorage.setItem('savedIdentity', identityNumber);
+        } else {
+          localStorage.removeItem('savedIdentity');
+        }
+        // إعادة توجيه المستخدم إلى صفحة التأكيد
+        window.location.href = "confirmation.html";
+      } else {
+        messageDiv.textContent = 'خطأ: رقم الطلب أو كلمة المرور غير صحيحة.';
+      }
+    }
+
+    // عند تحميل الصفحة، قم بملء رقم الطلب إذا كان محفوظًا
+    window.onload = function() {
+      const savedIdentity = localStorage.getItem('savedIdentity');
+      if (savedIdentity) {
+        document.getElementById('identityNumber').value = savedIdentity;
+        document.getElementById('rememberMe').checked = true;
+      }
+    };
+  </script>
+</body>
+</html>
